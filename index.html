@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Conditional Response</title>
+    <script>
+        function handleRequest() {
+            var contentType = this.getRequestHeader('Content-Type');
+            var body = this.getRequestBody();
+
+            if (contentType === 'plain/text' && body === 'no') {
+                this.sendResponse('false');
+            } else {
+                this.sendResponse('true');
+            }
+        }
+
+        function getRequestHeader(header) {
+            var headers = this.getAllRequestHeaders();
+            var headerLines = headers.split('\n');
+
+            for (var i = 0; i < headerLines.length; i++) {
+                var line = headerLines[i];
+                var parts = line.split(':');
+                var key = parts[0].trim();
+                var value = parts[1].trim();
+
+                if (key.toLowerCase() === header.toLowerCase()) {
+                    return value;
+                }
+            }
+
+            return null;
+        }
+
+        function getRequestBody() {
+            return this.requestBody;
+        }
+
+        function sendResponse(response) {
+            document.getElementById('response').textContent = response;
+        }
+    </script>
+</head>
+<body>
+    <h1>Conditional Response</h1>
+    <p>Send a request with headers 'Content-Type: plain/text' and body 'no' to get 'false' as the response. Otherwise, you will get 'true'.</p>
+    <button onclick="handleRequest()">Send Request</button>
+    <p>Response: <span id="response"></span></p>
+</body>
+</html>
